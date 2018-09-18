@@ -7,8 +7,11 @@
 
 In class:
 
+
 i. register Heroku,Github
+
 ii. install Django,Anaconda
+
 iii. learn heroku and git
 
 ### Homework:
