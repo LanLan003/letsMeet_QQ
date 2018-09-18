@@ -6,14 +6,14 @@
 
 ### Week1
 
-In class:
+**In class:**
 
-###### i. register Heroku,Github
+i. register Heroku,Github
 
-###### ii. install Django,Anaconda
+ii. install Django,Anaconda
 
-###### iii. learn heroku and git
+iii. learn heroku and git
 
-### Homework:
+**Homework:**
 
 link : https://lanhelloworldtest.herokuapp.com/
