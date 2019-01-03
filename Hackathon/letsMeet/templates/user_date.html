@@ -1,27 +1,32 @@
+{% extends "base.html" %}
 {% load  staticfiles %}
 <html>
 <head>
+  {% block extra_head %}
   <!--<script src="https://unpkg.com/konva@2.4.2/konva.min.js"></script>-->
   <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
   <meta charset="utf-8">
-  <link href="{% static 'css/style.css' %}" rel="stylesheet" type="text/css" />
-  <link href="{% static 'css/style_user.css' %}" rel="stylesheet" type="text/css" />
+  <link href="{% static 'css/style.css' %}" rel="stylesheet" type="text/css">
+  <link href="{% static 'css/style_user.css' %}" rel="stylesheet" type="text/css">
+  {% endblock %}
   <title>Let's meet !</title>
 </head>
 
 <body>
-  	<span id="event" class="textContent">{{ eventName }}</span>
+  {% block content %}
+    <span id="event" class="textContent">{{ eventName }}</span>
 
-  	<form action="." method="POST">
-	  {% csrf_token %}
+
+    <form action="." method="POST">
+    {% csrf_token %}
       <input type="text" name="yourName" placeholder="Your Name"/>
       <input type="submit" value="Submit"/>
       
       <ol id="selectable">
       <script type="text/javascript">
       {% for h in timeChosen%}
-  	  {% for d in dayChosen%}
+      {% for d in dayChosen%}
         $( "#selectable" ).append("<li id='{{ d }}_{{ h }}'>{{ d | slice:'6:' }}<br><span class='date' style='font-size: 18px;'>{{ d | slice:':2' }}/{{ d | slice:'3:5' }}</span><br>{{ h }}</li>");
         if ( "{{ d | slice:'6:' }}" == "{{ lastDay | slice:'6:'}}" ) {
           $( "#selectable" ).append("<p class='space' style='display: inline-block; color: transparent;'>&nbsp&nbsp</p>");
@@ -33,8 +38,9 @@
       </ol>
 
       <input type="hidden" id="freeTime" name="freeTime" value="">
- 	</form>
-  	
+      
+  </form>
+    
 
   <script>
   
@@ -75,5 +81,6 @@
     alert("使用者名稱重複囉！");
     {% endif %}
   </script>
+{% endblock %}
 </body>
 </html>

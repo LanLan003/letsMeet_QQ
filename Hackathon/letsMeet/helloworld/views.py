@@ -1,28 +1,80 @@
 from django.shortcuts import render,redirect   # 加入 redirect 套件
 from django.contrib.auth import authenticate
+from django.contrib import messages
 from django.contrib import auth
 from django.http import HttpResponse
 from django.contrib.auth.models import User
 from event.models import Event, Response
 
+def index(request):
+	return render(request, 'welnew.html',locals())
+
+def login(request):
+	if request.user.is_authenticated:
+		return render(request, 'home.html',locals())
+
+	if request.method == 'POST':
+		username = request.POST.get('name')
+		password = request.POST.get('pass')
+		user = auth.authenticate(username=username, password=password)
+		auth.login(request,user)
+		if user is not None:
+			if user.is_active:
+				auth.login(request,user)
+				events = Event.objects.filter(owner=user.username)
+				eventName = []
+				for i in range(len(events)):
+					name = events[i].eventName
+					eventName.append(name)
+			else:
+				return HttpResponse('尚未登入')
+		else:
+			return HttpResponse('登入失敗!')
+	return render(request, 'home.html', locals())
+
+def logout(request):
+	auth.logout(request)
+	return render(request, 'welnew.html',locals())
+
+def signup(request):
+	if request.method == 'POST':
+		username = request.POST.get('regname')
+		password = request.POST.get('regpass')
+		email = ""
+		
+		# --- 不會顯示登入error! --- #
+		try:
+			user = User.objects.get(username=username)
+		except:
+			#user = None
+			#if user is None:
+			user = User.objects.create_user(username, email, password)
+			user.save()
+			#messages.add_message(request, messages.INFO, '註冊成功')
+			messages.info(request, '註冊成功')
+			#print('註冊成功')
+		else:
+			#messages.add_message(request, messages.INFO, '此使用者已經有人使用')
+			messages.info(request, '此使用者已經有人使用')
+			#print("此使用者已經有人使用")              
+		
+		return redirect('/')
+
 
 def createEvent(request):
 	#error = False
-	#urlExist = False
-	#if request.method == 'GET':
 	if request.GET:
 		eventName = request.GET.get('eventName')
-		#try:
-			#Event.objects.filter(eventName=eventName)
-			#error = True
-		#except:
 		owner = request.GET.get('owner')
 		dayChosen = request.GET.get('dayChosen')
 		timeChosen = request.GET.get('timeChosen')
 		randUrl = '/' + request.GET.get('randUrl') + '/'
+		#if not eventName or not dayChosen:
+		#	error = True
+		#if not error:
 		Event.objects.create(eventName=eventName, owner=owner, dayChosen=dayChosen, timeChosen=timeChosen, randUrl=randUrl)
 		return redirect(randUrl)
-	return render(request, 'week_trydate.html')
+	return render(request, 'week.html')
 
 
 
@@ -59,14 +111,9 @@ def newEvent(request):
 			ifDate = True
 
 	if ifDate == True:
-		return render(request, 'user_trydate.html',locals())
+		return render(request, 'user_date.html',locals())
 	else:
 		return render(request, 'user.html',locals())
-
-
-
-	#return HttpResponse(dC)
-	
 
 
 def resultpage(request):
@@ -155,17 +202,6 @@ def resultpage(request):
 			ifDate = True
 
 	if ifDate == True:
-		return render(request, 'result_trydate.html',locals())
+		return render(request, 'result_date.html',locals())
 	else:
 		return render(request, 'result.html',locals())
-
-	#return HttpResponse(do)
-
-	# 分層設色done
-	# 合併後debug continuing
-	# 表單的提示訊息 使用者done 帳號? 事件notyet
-	# 顯示填單的人
-	# 連結關閉 notyet
-	# 使用者名稱不重複done
-	# 加入日期系統 第一頁done 第二頁done 第三頁done
-	# 加入切換模式 notyet

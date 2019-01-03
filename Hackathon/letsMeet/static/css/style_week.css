@@ -150,7 +150,7 @@
   /* The container must be positioned relative: */
   .custom-select {
     position: absolute;
-    top: 23%;
+    top: 35%;
     left: 65%;
   }
 
