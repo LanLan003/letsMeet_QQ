@@ -1,0 +1,106 @@
+{% load  staticfiles %}
+<html>
+<head>
+  <script src="https://unpkg.com/konva@2.4.2/konva.min.js"></script>
+  <meta charset="utf-8">
+  <link href="{% static 'css/style.css' %}" rel="stylesheet" type="text/css" />
+  <title>Let's meet !</title>
+</head>
+
+<body>
+	<form action="." method="POST">
+		{% csrf_token %}
+		{{ form }}
+		{{ dayChosen }}
+    	<input type="submit" value="Submit"/>
+ 	</form>
+	
+	<script>
+
+    var width = window.innerWidth;
+    var height = window.innerHeight;
+
+    var stage = new Konva.Stage({
+        container: "container",
+        width: width,
+        height: height
+    });
+
+    var layer = new Konva.Layer();
+    var text_X = [145, 225, 305, 385, 465, 545, 625]
+    var text = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+    var rec_X = [120, 200, 280, 360, 440, 520, 600]
+    var dayChosen = []
+	</script>
+
+<!-------------------------------------------------------------->
+
+	{% for i in dayChosen %}
+		<div>{{ i }}</div>
+	<!--<script>
+		for(var j = 0; j < 3 ; j++) {
+    	var simpleText = new Konva.Text({
+      		x: width * j * 0.15,
+     		y: 240,
+      		text: i,
+      		fontSize: 30,
+      		fontFamily: 'Calibri',
+      		fill: 'black'
+    	});
+    	
+    	simpleText.setOffset({
+      		x: simpleText.getWidth() / 2
+    	});
+
+    	var rectangle = new Konva.Rect({
+        	id: i,
+        	x: width * j * 0.15,
+        	y: 280,
+        	width:50,
+        	height:250,
+        	fill: 'red',
+        	stroke: 'black',
+        	strokeWidth: 4
+    	});
+
+    	rectangle.on('click', function() {
+        	var fill = this.fill() == 'red' ? '#00d00f' : 'red';
+        	this.fill(fill);
+        	layer.draw();
+        	if (this.fill() != 'red') {
+          		dayChosen.push(this.id());
+          		// alert(text[this.id()])
+        	} else {
+          		var n = dayChosen.indexOf(this.id());
+          		dayChosen.splice(n,1);
+        	}
+    	});
+
+    	layer.add(simpleText);
+    	layer.add(rectangle);
+    }
+    </script>-->
+    {% endfor %}
+
+<!-------------------------------------------------------------->
+    
+    <script>
+    stage.add(layer);
+
+    function sendDays() {
+      document.getElementById("dayChosen").value = dayChosen;
+    }
+
+    </script>
+
+
+
+  </script>
+
+
+
+
+
+
+</body>
+</html>

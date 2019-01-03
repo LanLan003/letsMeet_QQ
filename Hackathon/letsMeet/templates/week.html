@@ -1,0 +1,105 @@
+{% load  staticfiles %}
+<html>
+<head>
+  <!--<script src="https://unpkg.com/konva@2.4.2/konva.min.js"></script>-->
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <script src="{% static 'js/moment.min.js' %}"></script>  <!-- 抓到了 -->
+  <meta charset="utf-8">
+  <link href="{% static 'css/style.css' %}" rel="stylesheet" type="text/css">
+  <link href="{% static 'css/style_week.css' %}" rel="stylesheet" type="text/css">
+  <title>Let's meet !</title>
+</head>
+
+<body>
+  <form action="." method="get" id="myform">
+    <input type="text" name="eventName" placeholder="New Event" id="eventName">
+    <span class="textContent">create by:</span><input type="text" name="owner" placeholder="Event Owner" id="owner">
+
+    <ol id="selectable">
+      <li id="Mon">Mon</li>  <!--class="ui-widget-content"-->
+      <li id="Tue">Tue</li>
+      <li id="Wed">Wed</li>
+      <li id="Thu">Thu</li>
+      <li id="Fri">Fri</li>
+      <li id="Sat">Sat</li>
+      <li id="Sun">Sun</li>
+    </ol>
+
+    <span id="amount" class="textContent"></span>
+    <input type="hidden" name="dayChosen" value="" id="dayChosen">
+    <input type="hidden" name="timeChosen" value="" id="timeChosen">
+    <input type="hidden" name="randUrl" value="" id="randUrl">
+    <input type="submit" value="Click me" id="submit">  <!--onclick="send()"-->
+    <div id="slider-range"></div>
+  </form>
+
+  <script>
+    alert(moment().format('MM/DD ddd'));
+  
+  // Create Selectable Button //
+  $( function() {
+    $( "#selectable" ).bind("mousedown", function(evt) {
+    evt.metaKey = true;
+    }).selectable({
+      stop: function() {
+        var dayChosen = [];
+        $( ".ui-selected" , this ).each(function() {
+          var id = $( this ).attr('id')
+          dayChosen.push( id );
+          $( "#dayChosen" )[0].value = dayChosen;
+        });
+      }
+    });
+  } );
+
+  // Create Slider //
+  $( function() {
+    $( "#slider-range" ).slider({
+      range: true,
+      min: 0,
+      max: 24,
+      values: [ 9, 17 ],
+      slide: function( event, ui ) {
+        $( "#amount" ).text( ui.values[ 0 ] + ":00 - " + ui.values[ 1 ] + ":00" );
+        var timeChosen = [];
+        for (var hour = ui.values[ 0 ]; hour <= ui.values[ 1 ]; hour++) {
+          timeChosen.push( hour + ":00" );
+        };
+        $( "#timeChosen" )[0].value = timeChosen;
+      }
+    });
+    $( "#amount" ).text( $( "#slider-range" ).slider( "values", 0 ) +
+      ":00 - " + $( "#slider-range" ).slider( "values", 1 ) + ":00" );
+    if ($( "#timeChosen" )[0].value == "") {
+      var timeChosen = [];
+      for (var hour = $( "#slider-range" ).slider( "values", 0 ); hour <= $( "#slider-range" ).slider( "values", 1 ); hour++) {
+        timeChosen.push( hour + ":00" );
+      };
+      $( "#timeChosen" )[0].value = timeChosen;
+    };
+  } );
+
+  // 防呆 //
+  $( function() {
+    $( "#submit" ).bind("mousedown", function(evt) {
+      if ($( "#dayChosen" )[0].value == "") {
+        alert("記得選填日期喔！");
+      };
+    })
+  } );
+
+  // Generate Random URL //
+    var randUrl = "user/";
+    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+    for (var i = 0; i < 10; i++) {
+      randUrl += possible.charAt(Math.floor(Math.random() * possible.length));
+    };
+    
+    //document.getElementById("randUrl").value = randUrl;  /** 要加[0]才會一樣！ **/
+    $( "#randUrl" )[0].value = randUrl
+
+  </script>
+
+</body>
+</html> 

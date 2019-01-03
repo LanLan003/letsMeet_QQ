@@ -1,0 +1,30 @@
+{% load  staticfiles %}
+<html>
+<head>
+  <script src="https://unpkg.com/konva@2.4.2/konva.min.js"></script>
+  <meta charset="utf-8">
+  <link href="{% static 'css/style.css' %}" rel="stylesheet" type="text/css" />
+  <title>Let's meet !</title>
+</head>
+
+<body>
+
+
+<input id="input" type="text"/ value='{{ request.build_absolute_uri }}'>
+<button id="copy">Copy</button>
+
+
+<script>
+
+function copy() {
+  var copyText = document.querySelector("#input");
+  copyText.select();
+  document.execCommand("copy");
+}
+
+document.querySelector("#copy").addEventListener("click", copy);
+
+</script>
+
+</body>
+</html>
